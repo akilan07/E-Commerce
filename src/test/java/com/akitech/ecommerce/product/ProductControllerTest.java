@@ -1,5 +1,6 @@
 package com.akitech.ecommerce.product;
 
+import com.akitech.ecommerce.common.InternalException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -13,8 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(ProductController.class)
@@ -42,11 +42,11 @@ class ProductControllerTest {
     @Test
     public void shouldFailWhenServiceReturnFailed() throws Exception {
         Product product = new Product(1, "Shirt", 3, "Men Shirt Slim fit");
-        Mockito.when(productService.addProduct(Mockito.any())).thenThrow(new Exception());
+        Mockito.when(productService.addProduct(Mockito.any())).thenThrow(new InternalException());
 
         mockMvc.perform(post("/products/")
                         .contentType(MediaType.APPLICATION_JSON_VALUE)
-                        .content(product.toString()))
+                        .content(objectMapper.writeValueAsString(product)))
                 .andExpect(status().isInternalServerError());
     }
 
@@ -71,4 +71,34 @@ class ProductControllerTest {
                 .andExpect(status().isNoContent());
     }
 
+    @Test
+    public void shouldUpdateProductSuccessfully() throws Exception {
+        Product product = new Product(1, "Shirt", 3, "Men Shirt Slim fit");
+
+        mockMvc.perform(put("/products/")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(product)))
+                .andExpect(status().isOk());
+    }
+
+    @Test
+    public void shouldReturnNoProductFound() throws Exception {
+        Product product = new Product(1, "Shirt", 3, "Men Shirt Slim fit");
+        Mockito.when(productService.updateProduct(Mockito.any())).thenThrow(new NoProductFound());
+
+        mockMvc.perform(put("/products/")
+                        .contentType(MediaType.APPLICATION_JSON_VALUE)
+                        .content(objectMapper.writeValueAsString(product)))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    public void shouldSoftDeleteProductSuccessfully() throws Exception {
+        int productID = 1;
+        Product product = new Product(1, "Shirt", 3, "Men Shirt Slim fit");
+        Mockito.when(productService.deleteProduct(Mockito.anyInt())).thenReturn(product);
+
+        mockMvc.perform(delete("/products/"+productID))
+                .andExpect(status().isOk());
+    }
 }
