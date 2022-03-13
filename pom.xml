@@ -11,7 +11,7 @@
 	<groupId>com.akitech</groupId>
 	<artifactId>SpringBooECommerce</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>SpringBooECommerce</name>
+	<name>ECommerce</name>
 	<description>Project using NOSql E-commerce basics</description>
 	<properties>
 		<java.version>1.8</java.version>

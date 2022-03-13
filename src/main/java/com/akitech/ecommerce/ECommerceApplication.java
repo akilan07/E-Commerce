@@ -1,13 +1,13 @@
-package com.akitech.SpringBooECommerce;
+package com.akitech.ecommerce;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SpringBooECommerceApplication {
+public class ECommerceApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SpringBooECommerceApplication.class, args);
+		SpringApplication.run(ECommerceApplication.class, args);
 	}
 
 }
