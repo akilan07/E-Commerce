@@ -11,7 +11,7 @@ import org.springframework.data.mongodb.core.mapping.Field;
 @AllArgsConstructor
 @NoArgsConstructor
 @Document("Product")
-public class Product {
+public class Product extends ProductType{
     @Id
     private int id;
     private String name;
